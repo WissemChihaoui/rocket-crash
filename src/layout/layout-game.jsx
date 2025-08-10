@@ -1,9 +1,13 @@
 import React from "react";
+import StarrySkyCanvas from "../components/StarSky";
 
-const LayoutGame = ({children}) => {
+const LayoutGame = ({ children }) => {
     return (
-        <main className="m-0 bg-slate-800 w-screen h-screen">
-            {children}
+        <main className="relative m-0 bg-black w-screen h-screen flex-1 font-barlow overflow-hidden">
+            <StarrySkyCanvas />
+            <div style={{ position: "relative", zIndex: 10 }}>
+                {children}
+            </div>
         </main>
     )
 }

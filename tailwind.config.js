@@ -5,7 +5,14 @@ export default {
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        barlow :  ['Barlow', "sans-serif"]
+      },
+      colors: {
+        primary: '#45f882'
+      }
+    },
   },
   plugins: [],
 }
