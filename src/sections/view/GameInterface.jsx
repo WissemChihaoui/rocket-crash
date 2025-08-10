@@ -15,7 +15,7 @@ export default function GameInterface() {
     return (
         <LayoutGame>
             <GameModals />
-            <div className="flex flex-col h-screen p-1">
+            <div className="flex flex-col h-screen p-1 max-w-screen-2xl mx-auto">
                 <Header />
                 <RocketInterface />
                 <BidSections />
