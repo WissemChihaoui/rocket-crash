@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Icon } from "@iconify/react";
 import gsap from "gsap";
+import { useTranslation } from "../../locals/TranslationContext";
 
 const LANGUAGES = [
   { code: "ar", label: "Arabic", flag: "twemoji:flag-tunisia" },
@@ -9,61 +10,125 @@ const LANGUAGES = [
 ];
 
 export default function LanguagePopover() {
+    const { locale, setLocale } =useTranslation()
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState("en");
+  const [visible, setVisible] = useState(false);
+  const [selected, setSelected] = useState(locale);
   const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   const currentLang = LANGUAGES.find((lang) => lang.code === selected);
 
-  // GSAP animation
+  // Animate open/close
   useEffect(() => {
-    if (open && menuRef.current) {
-      gsap.fromTo(
-        menuRef.current,
-        { opacity: 0, x: 15, scale: 0.9 },
-        { opacity: 1, x: 0, scale: 1, duration: 0.25, ease: "power2.out" }
-      );
-    } else if (!open && menuRef.current) {
+    if (open) {
+      setVisible(true);
+    } else if (menuRef.current) {
       gsap.to(menuRef.current, {
         opacity: 0,
-        x: 15,
-        scale: 0.9,
+        y: -10,
+        scale: 0.95,
         duration: 0.2,
         ease: "power2.in",
+        onComplete: () => setVisible(false),
       });
     }
   }, [open]);
 
+  useEffect(() => {
+    if (visible && menuRef.current) {
+      gsap.fromTo(
+        menuRef.current,
+        { opacity: 0, y: -10, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "power2.out" }
+      );
+    }
+  }, [visible]);
+
+  // Close popover on outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setOpen(false);
+      }
+    }
+    if (open) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [open]);
+
   return (
-    <div className="relative inline-block">
-      {/* Current language button */}
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="p-2 bg-gray-800 rounded-full hover:bg-gray-700 transition"
-      >
+    <div className="relative inline-block text-left">
+      {/* Flag button with overlay */}
+      <div className="relative inline-block" ref={buttonRef}>
         <Icon icon={currentLang.flag} className="text-2xl" />
-      </button>
+        <div
+          onClick={() => setOpen((v) => !v)}
+          className="absolute inset-0 cursor-pointer"
+          aria-haspopup="true"
+          aria-expanded={open}
+          aria-label="Select language"
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setOpen((v) => !v);
+            }
+          }}
+        />
+      </div>
 
       {/* Popover menu */}
-      {open && (
+      {visible && (
         <div
           ref={menuRef}
-          className="absolute left-[-3.5rem] top-1/2 -translate-y-1/2 flex 
-                     bg-gray-900 rounded-lg shadow-lg p-1 z-50"
+          className="absolute left-0 mt-2 w-40 bg-gray-900 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+          role="menu"
+          aria-orientation="vertical"
+          tabIndex={-1}
         >
           {LANGUAGES.map((lang) => (
-            <button
-              key={lang.code}
-              onClick={() => {
-                setSelected(lang.code);
-                setOpen(false);
-              }}
-              className={`p-1 rounded hover:bg-gray-700 transition ${
-                lang.code === selected ? "bg-gray-700" : ""
-              }`}
-            >
-              <Icon icon={lang.flag} className="text-2xl" />
-            </button>
+            <div key={lang.code} className="relative w-full">
+              <div
+                className={`w-full flex items-center gap-2 px-4 py-2 text-sm text-white rounded-md transition ${
+                  lang.code === selected ? "bg-gray-700 font-semibold" : ""
+                } hover:bg-gray-700 cursor-pointer select-none`}
+              >
+                <Icon icon={lang.flag} className="text-xl" />
+                {lang.label}
+              </div>
+              <div
+                role="menuitem"
+                tabIndex={0}
+                aria-checked={lang.code === selected}
+                onClick={() => {
+                  setSelected(lang.code);
+                  setLocale(lang.code)
+                  setOpen(false);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setSelected(lang.code);
+                  setLocale(lang.code)
+
+                    setOpen(false);
+                  }
+                }}
+                className="absolute inset-0 cursor-pointer"
+              />
+            </div>
           ))}
         </div>
       )}

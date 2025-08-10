@@ -10,10 +10,11 @@ import FullScreenSideMenu from "../components/side-menu/FullSideMenu";
 import { usePlayingTime } from "../hooks/use-playing-time";
 import TopBiddersList from "./TopBiddersList";
 import LanguagePopover from "../components/language-popover/LanguagePopover";
+import { useTranslation } from "../locals/TranslationContext";
 
 export default function Header() {
   const { muted, toggleMute } = useSound();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const { t, locale, setLocale } = useTranslation();
   const menu = useBoolean()
   const topBidders = useBoolean()
   const playingTime = usePlayingTime();
@@ -25,7 +26,7 @@ export default function Header() {
     <>
       <div className="text-white">
         <div className="w-full flex justify-between items-center px-2 py-1">
-          <span className="font-bold">Balance :1200 $</span>
+          <span className="font-bold">{t('balance')} :1200 $</span>
           <div className="flex items-center text-3xl gap-2">
             <LanguagePopover />
             <button
