@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Icon } from "@iconify/react";
+import gsap from "gsap";
 
 const LANGUAGES = [
   { code: "ar", label: "Arabic", flag: "twemoji:flag-tunisia" },
@@ -10,8 +11,28 @@ const LANGUAGES = [
 export default function LanguagePopover() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState("en");
+  const menuRef = useRef(null);
 
   const currentLang = LANGUAGES.find((lang) => lang.code === selected);
+
+  // GSAP animation
+  useEffect(() => {
+    if (open && menuRef.current) {
+      gsap.fromTo(
+        menuRef.current,
+        { opacity: 0, x: 15, scale: 0.9 },
+        { opacity: 1, x: 0, scale: 1, duration: 0.25, ease: "power2.out" }
+      );
+    } else if (!open && menuRef.current) {
+      gsap.to(menuRef.current, {
+        opacity: 0,
+        x: 15,
+        scale: 0.9,
+        duration: 0.2,
+        ease: "power2.in",
+      });
+    }
+  }, [open]);
 
   return (
     <div className="relative inline-block">
@@ -26,8 +47,9 @@ export default function LanguagePopover() {
       {/* Popover menu */}
       {open && (
         <div
-          className="absolute left-[-3.5rem] top-1/2 -translate-y-1/2 flex flex-col 
-                     bg-gray-900 rounded-lg shadow-lg p-1 animate-fadeIn z-50"
+          ref={menuRef}
+          className="absolute left-[-3.5rem] top-1/2 -translate-y-1/2 flex 
+                     bg-gray-900 rounded-lg shadow-lg p-1 z-50"
         >
           {LANGUAGES.map((lang) => (
             <button
