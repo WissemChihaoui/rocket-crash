@@ -18,6 +18,10 @@ export default function LanguagePopover() {
 
   const currentLang = LANGUAGES.find((lang) => lang.code === selected);
 
+  useEffect(() => {
+  setSelected(locale);
+}, [locale]);
+
   // Animate open/close
   useEffect(() => {
     if (open) {
