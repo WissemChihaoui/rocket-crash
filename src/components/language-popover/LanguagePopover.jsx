@@ -3,14 +3,13 @@ import { Icon } from "@iconify/react";
 import gsap from "gsap";
 import { useTranslation } from "../../locals/TranslationContext";
 
-const LANGUAGES = [
-  { code: "ar", label: "Arabic", flag: "twemoji:flag-tunisia" },
-  { code: "en", label: "English", flag: "twemoji:flag-united-kingdom" },
-  { code: "fr", label: "French", flag: "twemoji:flag-france" },
-];
-
 export default function LanguagePopover() {
-    const { locale, setLocale } =useTranslation()
+  const { t, locale, setLocale } = useTranslation()
+  const LANGUAGES = [
+  { code: "ar", label: t('header.language.ar'), flag: "twemoji:flag-tunisia" },
+  { code: "en", label: t('header.language.en'), flag: "twemoji:flag-united-kingdom" },
+  { code: "fr", label: t('header.language.fr'), flag: "twemoji:flag-france" },
+];
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState(locale);
@@ -101,9 +100,8 @@ export default function LanguagePopover() {
           {LANGUAGES.map((lang) => (
             <div key={lang.code} className="relative w-full">
               <div
-                className={`w-full flex items-center gap-2 px-4 py-2 text-sm text-white rounded-md transition ${
-                  lang.code === selected ? "bg-gray-700 font-semibold" : ""
-                } hover:bg-gray-700 cursor-pointer select-none`}
+                className={`w-full flex items-center gap-2 px-4 py-2 text-sm text-white rounded-md transition ${lang.code === selected ? "bg-gray-700 font-semibold" : ""
+                  } hover:bg-gray-700 cursor-pointer select-none`}
               >
                 <Icon icon={lang.flag} className="text-xl" />
                 {lang.label}
@@ -121,7 +119,7 @@ export default function LanguagePopover() {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     setSelected(lang.code);
-                  setLocale(lang.code)
+                    setLocale(lang.code)
 
                     setOpen(false);
                   }

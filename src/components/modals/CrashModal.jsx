@@ -1,7 +1,8 @@
-// CrashModal.jsx
 import React from "react";
+import { useTranslation } from "../../locals/TranslationContext";
 
 export default function CrashModal({ visible, multiplier }) {
+  const { t } = useTranslation()
   if (!visible) return null;
 
   return (
@@ -24,7 +25,7 @@ export default function CrashModal({ visible, multiplier }) {
           textShadow: "0 0 6px #EF4444",
         }}
       >
-        CRASH
+        {t('game.crash')}
       </div>
     </>
   );

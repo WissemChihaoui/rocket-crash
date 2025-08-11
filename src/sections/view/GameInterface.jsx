@@ -11,7 +11,6 @@ import GameModals from '../../components/GameModals'
 
 
 export default function GameInterface() {
-    const { status } = useContext(GameContext)
     return (
         <LayoutGame>
             <GameModals />

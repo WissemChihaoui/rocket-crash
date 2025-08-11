@@ -2,12 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { Icon } from "@iconify/react";
 import gsap from "gsap";
 import { useSound } from "../../context/SoundContext";
+import { useTranslation } from "../../locals/TranslationContext";
 
-const TABS = [
-  { id: "myBets", label: "My Bets", icon: "mdi:cards-outline" },
-  { id: "rules", label: "Rules", icon: "mdi:file-document-outline" },
-  { id: "exit", label: "Exit Game", icon: "mdi:exit-to-app" },
-];
+
 
 const BETS = [
   { time: "12:01", amount: "50.00", multiplier: "2.5x", payout: "+75.00", win: true },
@@ -24,9 +21,15 @@ const BETS = [
 
 export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
   const menuRef = useRef(null);
+  const { t } = useTranslation();
+
   const { volume, setVolume } = useSound();
   const [activeTab, setActiveTab] = useState("myBets");
-
+  const TABS = [
+    { id: "myBets", label: t('header.menu.myBets.title'), icon: "mdi:cards-outline" },
+    { id: "rules", label: t('header.menu.rules.title'), icon: "mdi:file-document-outline" },
+    { id: "exit", label: t('header.menu.exit.title'), icon: "mdi:exit-to-app" },
+  ];
   // Slide in/out animation
   useEffect(() => {
     if (!menuRef.current) return;
@@ -39,17 +42,17 @@ export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
 
   const renderContent = () => {
     switch (activeTab) {
-     case "myBets":
+      case "myBets":
         return (
           <div className="p-4 text-white overflow-auto" style={{ maxHeight: "70vh" }}>
-            <h2 className="text-2xl font-bold mb-4">My Bets</h2>
+            <h2 className="text-2xl font-bold mb-4">{t('header.menu.myBets.title')}</h2>
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-800">
-                  <th className="p-2">Time</th>
-                  <th className="p-2">Bet Amount</th>
-                  <th className="p-2">Multiplier</th>
-                  <th className="p-2">Payout</th>
+                  <th className="p-2">{t('header.menu.myBets.time')}</th>
+                  <th className="p-2">{t('header.menu.myBets.betAmount')}</th>
+                  <th className="p-2">{t('header.menu.myBets.multiplier')}</th>
+                  <th className="p-2">{t('header.menu.myBets.payout')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -62,9 +65,8 @@ export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
                     <td className="p-2">${bet.amount}</td>
                     <td className="p-2">{bet.multiplier}</td>
                     <td
-                      className={`p-2 font-bold ${
-                        bet.win ? "text-green-400" : "text-red-400"
-                      }`}
+                      className={`p-2 font-bold ${bet.win ? "text-green-400" : "text-red-400"
+                        }`}
                     >
                       {bet.payout}
                     </td>
@@ -77,20 +79,19 @@ export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
       case "rules":
         return (
           <div className="p-4 text-white overflow-auto" style={{ maxHeight: "70vh" }}>
-            <h2 className="text-2xl font-bold mb-4">Game Rules</h2>
+            <h2 className="text-2xl font-bold mb-4">{t('header.menu.rules.title')}</h2>
             <p>
-              {/* Put your rules here */}
-              1. Place your bets before the rocket launches. <br />
-              2. Cash out before it crashes.<br />
-              3. Enjoy the game!
+              <p>{t('header.menu.rules.content.1')}</p>
+              <p>{t('header.menu.rules.content.2')}</p>
+              <p>{t('header.menu.rules.content.3')}</p>
             </p>
           </div>
         );
       case "exit":
         return (
           <div className="p-4 text-white">
-            <h2 className="text-2xl font-bold mb-4">Exit Game</h2>
-            <p>Are you sure you want to exit?</p>
+            <h2 className="text-2xl font-bold mb-4">{t('header.menu.exit.title')}</h2>
+            <p>{t('header.menu.exit.confirmation')}</p>
             <button
               onClick={() => {
                 // Your exit logic here
@@ -99,7 +100,7 @@ export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
               }}
               className="mt-4 px-6 py-2 bg-red-600 rounded hover:bg-red-700 transition"
             >
-              Confirm Exit
+              {t('header.menu.exit.confirmBtn')}
             </button>
           </div>
         );
@@ -114,7 +115,7 @@ export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
       className="fixed top-0 right-0 w-full h-full bg-gray-900 z-[9999] transform translate-x-full flex flex-col"
     >
       <header className="flex items-center justify-between p-4 border-b border-gray-700">
-        <h1 className="text-xl font-bold text-white">Menu</h1>
+        <h1 className="text-xl font-bold text-white">{t('header.menu.title')}</h1>
         <button
           onClick={onClose}
           aria-label="Close menu"
@@ -129,9 +130,8 @@ export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
         {TABS.map(({ id, label, icon }) => (
           <button
             key={id}
-            className={`flex flex-col items-center py-3 px-4 flex-1 ${
-              activeTab === id ? "bg-gray-700" : "hover:bg-gray-700"
-            } transition`}
+            className={`flex flex-col items-center py-3 px-4 flex-1 ${activeTab === id ? "bg-gray-700" : "hover:bg-gray-700"
+              } transition`}
             onClick={() => setActiveTab(id)}
           >
             <Icon icon={icon} className="text-3xl mb-1" />
@@ -147,7 +147,7 @@ export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
       <footer className="p-4 border-t border-gray-700 bg-gray-800 text-white flex flex-col gap-4">
         <div>
           <label htmlFor="volume" className="block mb-1 font-semibold">
-            Volume: {(volume * 100).toFixed(0)}%
+            {t('header.menu.volume')}: {(volume * 100).toFixed(0)}%
           </label>
           <input
             id="volume"
@@ -161,7 +161,7 @@ export default function FullScreenSideMenu({ visible, onClose, playingTime }) {
           />
         </div>
         <div className="text-center tracking-wide">
-          Playing Time: {playingTime}
+          {t('header.menu.playingTime')} {playingTime}
         </div>
       </footer>
     </aside>

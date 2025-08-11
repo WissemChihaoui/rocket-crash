@@ -1,15 +1,17 @@
 import React, { useState } from "react";
+import { useTranslation } from "../../locals/TranslationContext";
 
 export default function Slider() {
   const [value, setValue] = useState(0); // 0 means "OFF"
+  const { t } = useTranslation()
 
   return (
     <div className="flex flex-col items-center w-full gap-2">
       {/* Label */}
       <div className="flex justify-between w-full text-sm md:text-base text-gray-400">
-        <span>Auto Cash Out:</span>
+        <span>{t('bids.amount.autoCashout')}:</span>
         <span className="text-white font-semibold">
-          {value === 0 ? "Off" : `${value}x`}
+          {value === 0 ? t('bids.amount.off') : `${value}x`}
         </span>
       </div>
 
@@ -26,8 +28,8 @@ export default function Slider() {
 
       {/* Min/Max labels */}
       <div className="flex justify-between w-full text-xs text-gray-500">
-        <span>OFF</span>
-        <span>MAX</span>
+        <span>{t('bids.amount.off')}</span>
+        <span>{t('bids.amount.max')}</span>
       </div>
     </div>
   );

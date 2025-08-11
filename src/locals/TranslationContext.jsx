@@ -1,32 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-
-// Sample translations object — extend as needed
-const TRANSLATIONS = {
-  en: {
-    welcome: "Welcome",
-    language: "Language",
-    exitGame: "Exit Game",
-    rules: "Rules",
-    myBets: "My Bets",
-    balance: 'Balance'
-  },
-  fr: {
-    welcome: "Bienvenue",
-    language: "Langue",
-    exitGame: "Quitter le jeu",
-    rules: "Règles",
-    myBets: "Mes Paris",
-    balance: 'Solde'
-  },
-  ar: {
-    welcome: "مرحبا",
-    language: "اللغة",
-    exitGame: "إنهاء اللعبة",
-    rules: "القواعد",
-    myBets: "رهاناتي",
-    balance: 'الرصيد'
-  },
-};
+import { TRANSLATIONS } from "./translations/index";
 
 const TranslationContext = createContext({
   locale: "en",
@@ -37,15 +10,16 @@ const TranslationContext = createContext({
 export function TranslationProvider({ children }) {
   const [locale, setLocale] = useState("en");
 
-  // Simple translate function to get string by key and current locale
   const t = (key) => {
-    return TRANSLATIONS[locale]?.[key] || key;
+    // Support nested keys like "header.language.ar"
+    return key.split(".").reduce((obj, k) => obj?.[k], TRANSLATIONS[locale]) || key;
   };
 
-  // Optional: persist locale in localStorage or sync with browser language
   useEffect(() => {
     const savedLocale = localStorage.getItem("locale");
-    if (savedLocale && TRANSLATIONS[savedLocale]) setLocale(savedLocale);
+    if (savedLocale && TRANSLATIONS[savedLocale]) {
+      setLocale(savedLocale);
+    }
   }, []);
 
   useEffect(() => {
@@ -59,7 +33,6 @@ export function TranslationProvider({ children }) {
   );
 }
 
-// Custom hook for consuming translation context
 export function useTranslation() {
   return useContext(TranslationContext);
 }

@@ -14,7 +14,7 @@ import { useTranslation } from "../locals/TranslationContext";
 
 export default function Header() {
   const { muted, toggleMute } = useSound();
-  const { t, locale, setLocale } = useTranslation();
+  const { t } = useTranslation();
   const menu = useBoolean()
   const topBidders = useBoolean()
   const playingTime = usePlayingTime();
@@ -26,7 +26,7 @@ export default function Header() {
     <>
       <div className="text-white">
         <div className="w-full flex justify-between items-center px-2 py-1">
-          <span className="font-bold">{t('balance')} :1200 $</span>
+          <span className="font-bold"><span>{t('balance')}</span> <span>:1200$</span></span>
           <div className="flex items-center text-3xl gap-2">
             <LanguagePopover />
             <button
